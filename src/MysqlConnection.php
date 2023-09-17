@@ -2,8 +2,9 @@
 
 namespace Amp\Mysql\DBAL;
 
-use Amp\Mysql\Connection as SqlConnection;
-use Amp\Mysql\Result as SqlResult;
+// use Amp\Mysql\Connection as SqlConnection;
+use Amp\Mysql\MysqlConnectionPool;
+use Amp\Mysql\MysqlResult as SqlResult;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Driver\Statement;
@@ -13,11 +14,11 @@ use function Amp\Pipeline\discard;
 
 class MysqlConnection implements ServerInfoAwareConnection
 {
-    private SqlConnection $connection;
+    private MysqlConnectionPool $connection;
     private \Closure $resultListener;
     private mixed $lastInsertId;
 
-    public function __construct(SqlConnection $connection)
+    public function __construct(MysqlConnectionPool $connection)
     {
         $this->connection = $connection;
         $this->resultListener = fn(SqlResult $result) => $this->lastInsertId = $result->getLastInsertId();

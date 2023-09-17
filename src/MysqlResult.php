@@ -2,7 +2,7 @@
 
 namespace Amp\Mysql\DBAL;
 
-use Amp\Mysql\Result as SqlResult;
+use Amp\Mysql\MysqlResult as SqlResult;
 use Doctrine\DBAL\Driver\FetchUtils;
 use Doctrine\DBAL\Driver\Result;
 
@@ -28,7 +28,7 @@ class MysqlResult implements Result
     public function fetchAssociative(): array|false
     {
         /** @noinspection ProperNullCoalescingOperatorUsageInspection */
-        return $this->result->continue() ?? false;
+        return $this->result->fetchRow() ?? false;
     }
 
     public function fetchOne()
@@ -63,6 +63,6 @@ class MysqlResult implements Result
 
     public function free(): void
     {
-        $this->result->dispose();
+//        $this->result->dispose();
     }
 }

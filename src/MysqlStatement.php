@@ -2,7 +2,7 @@
 
 namespace Amp\Mysql\DBAL;
 
-use Amp\Mysql\Statement as SqlStatement;
+use Amp\Mysql\MysqlStatement as SqlStatement;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\Statement;
@@ -19,6 +19,16 @@ class MysqlStatement implements Statement
         ParameterType::LARGE_OBJECT => null,
         ParameterType::BOOLEAN => null,
     ];
+    private const PARAM_TYPE_MAP = [
+        ParameterType::ASCII => 's',
+        ParameterType::STRING => 's',
+        ParameterType::BINARY => 's',
+        ParameterType::BOOLEAN => 'i',
+        ParameterType::NULL => 's',
+        ParameterType::INTEGER => 'i',
+        ParameterType::LARGE_OBJECT => 'b',
+    ];
+
 
     private SqlStatement $statement;
     private \Closure $resultListener;
@@ -36,7 +46,7 @@ class MysqlStatement implements Statement
 
     public function bindValue($param, $value, $type = ParameterType::STRING): bool
     {
-        if (!isset(self::PARAM_TYPES[$type])) {
+        if (!isset(self::PARAM_TYPE_MAP[$type])) {
             throw Exception\UnknownParameterType::new($type);
         }
 
